@@ -1,18 +1,16 @@
 body {
-    position: relative;
+    position:relative;
     text-align: center;
     font-family: 'Roboto', sans-serif;
-    background-color: rgb(43, 43, 43);
-    color: white;
 }
 button {
     margin-left: 1%;
     margin-top: 1%;
     font-size: 15px;
     border-color: rgb(0, 0, 0);
-}
 
-#searchTheater {
+}
+#addtask {
     margin-left: 0%;
     margin-top: 0%;
     font-size: 13px;
@@ -21,65 +19,30 @@ button {
 
 p {
     display: inline;
-    color: black;
+    margin: 0.25%;
 }
 
-@media (max-width: 425px) {
-    p {
-        size: 5rem;
+@media (max-width: 266px) {
+    body {
+        display: block;
+        overflow:auto;
     }
 }
 
 .oma {
-    font-size: 11px;
-    color: white;
-    bottom: 4px;
-    position: sticky;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.1rem;
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
-    border-radius: 0.5rem;
+    font-size: 10px;
 }
 
-h1 {
-    margin-top: 1.3rem;
+h2 {
+    margin-top: 3%;
+    opacity: 0%;
 }
 
-h3 {
-    size: 1.8rem;
+
+#donetasks * {
+    display: block;
 }
 
-.col {
-    margin-top: 1rem;
-    padding: 0%;
-    background-color: rgb(148, 148, 148);
-    border-radius: 0.4rem;
-    border-color: rgb(184, 184, 184);
-    border-width: 0.1rem;
-    border-style: solid;
-}
-
-select {
-    padding: 0.5rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-}
-
-.form-select {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    width: auto;
-    display: inline-block;
-}
-
-img {
-    width: 100%;
-    height: auto;
-    border-radius: 0.3rem;
-}
-
-.col {
-    width: 100%;
-    height: auto;
+#cleardone {
+    opacity: 0%;
 }
