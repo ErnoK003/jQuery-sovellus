@@ -79,7 +79,7 @@ function didTask(taskId) {
     const taskReady = $('#' + taskId).children('p')       //otetaan talteen taski
     $('#' + taskId).remove() //poistetaan taski
     const doneTasks = $('#donetasks') //haetaan done listan elementti
-    doneTasks.append(taskReady) //lisätään done listaan tehty tehtävä
+    $('#donetasks').append($('<div>').attr('id', taskId).append(taskReady)) //lisätään tehty tehtävä done listaan
 
     // Tallennetaan tehty tehtävä localStorageen ja täten tehtyihin tehtäviin
     let donetaskit = JSON.parse(localStorage.getItem('donetasks')) || [] //luodaan aTask-objekti, joka sisältää id:n ja tekstin
