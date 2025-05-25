@@ -1,36 +1,73 @@
 var pluku=0
 function addTask() {
-    const task = document.getElementById('task').value  //haetaan input-kentän sisältö muuttujaan
-    if (task.length <=3) { //estetään liian lyhyt tehtävän kuvaus
+    const task = $('#task').val()  //haetaan input-kentän sisältö(val) muuttujaan
+    if (task.length <=2) { //estetään liian lyhyt tehtävän kuvaus
         if (task=='' || task==' '){
             alert('Please enter a task')
-            document.getElementById('task').value = ''
+            $('#task').val('') //tyhjennetään input-kenttä
             return
         } else {
             alert('Task description is too short')
-            document.getElementById('task').value = ''
+            $('#task').val('') //tyhjennetään input-kenttä
             return
         }
     }
-    const uusitask = document.createElement('div') //uuden div-elementin luonti (saadaan nappi ja p-elementti saman divin alle)
-    const uusip = document.createElement('p') //uuden p-elementin luonti
-    uusip.setAttribute('id',pluku)
-    uusip.innerHTML = task //lisätään p-elementtiin input-kentän sisältö
-    const uusinappi = document.createElement('button') //uuden button-elementin luonti
-    const poistonappi = document.createElement('button') //uuden poistonappi-elementin luonti
-    uusinappi.innerHTML = '✓' //lisätään button-elementtiin Done -teksti
-    poistonappi.innerHTML = 'X' //lisätään poistonapin-elementtiin X -teksti
-    uusinappi.setAttribute('onclick', 'didTask('+pluku+')') //laitetaan button poistamaan taski
-    poistonappi.setAttribute('onclick', 'removeTask('+pluku+')')
-    uusitask.appendChild(uusip) //lisätään p-elementti diviin
-    uusitask.appendChild(uusinappi) //lisätään button-elementti p-elementin sisään
-    uusitask.appendChild(poistonappi) //lisätään poistonappi-elementti p-elementin sisään
-    document.getElementById('tasks').appendChild(uusitask) //lisätään uusitask diviin
-    console.log(uusitask)
-    document.getElementById('task').value = '' //tyhjennetään input-kenttä seuraavaa syötettä varten
+    // Luodaan uusi div-elementti, johon lisätään tehtävä ja napit
+    const apuluku = pluku
+    const uusitask = $('<div>').attr('id', apuluku).appendTo('body') //uuden div-elementin luonti (saadaan nappi ja p-elementti saman divin alle)
+    $('<p>').attr('id', "taskname").text(task).appendTo(uusitask) //uuden p-elementin luonti ja lisätään p-elementtiin input-kentän sisältö
+    $('<button>').attr('class', "btn btn-success").html('✓').on('click', function() {didTask(apuluku)}).appendTo(uusitask) //uuden button-elementin luonti
+    $('<button>').attr('class', "btn btn-danger").html('X').on('click', function() {removeTask(apuluku)}).appendTo(uusitask) //uuden poistonappi-elementin luonti
+    
+    // Tallennetaan tehtävä localStorageen
+    let taskit = JSON.parse(localStorage.getItem('tasks')) || []
+    const aTask = {id: apuluku, text: task} //luodaan aTask-objekti, joka sisältää id:n ja tekstin
+    taskit.push(aTask) //lisätään aTask-objekti taskit-taulukkoon
+    localStorage.setItem('tasks', JSON.stringify(taskit)) //tallennetaan taskit-taulukko localStorageen
+    
+    $('#tasks').append(uusitask) //lisätään uusitask diviin
+    $('#task').val('') //tyhjennetään input-kenttä
     pluku+=1
-    console.log(uusip.getAttribute('id'))
+
 }
+
+// Kuuntelija, joka tarkistaa localStoragesta, onko tehtäviä olemassa ja tuo ne näkyviin
+$(document).ready(function oldTasks() {
+    const taskit = JSON.parse(localStorage.getItem('tasks')) || []
+    console.log(taskit)
+    if (taskit.length > 0) {
+        taskit.forEach(function(task) {
+            const uusitask = $('<div>').attr('id', task.id)
+            $('<p>').attr('id', "taskname").text(task.text).appendTo(uusitask)
+            $('<button>').attr('class', "btn btn-success").html('✓').on('click', function() { didTask(task.id); }).appendTo(uusitask)
+            $('<button>').attr('class', "btn btn-danger").html('X').on('click', function() { removeTask(task.id); }).appendTo(uusitask)
+            $('#tasks').append(uusitask)
+        });
+    }
+});
+
+// Kuuntelija, joka tarkistaa localStoragesta, onko !tehtyjä! tehtäviä olemassa ja tuo ne näkyviin
+$(document).ready(function doneTasks() {
+    const donetaskit = JSON.parse(localStorage.getItem('donetasks')) || []
+    console.log(donetaskit)
+    if (donetaskit.length > 0) {
+        donetaskit.forEach(function(task) {
+            const uusitask = $('<div>').attr('id', task.id)
+            $('<p>').text(task).appendTo(uusitask)
+            $('#donetasks').append(uusitask)
+        });
+    }
+
+    const h2 = $('h2') //haetaan done listan h2-elementti
+    const clearDoneButton = $('#cleardone')
+    if (donetaskit.length > 0) {      //jos done listalla on taskeja, h2-elementti ja clear-nappi tulee näkyviin
+        h2.css('opacity', '100%') //muutetaan h2-elementin ja napin tyyliä
+        clearDoneButton.css('opacity', '100%')
+    } else {
+        h2.css('opacity', '0%') //muutetaan h2-elementin ja napin tyyliä
+        clearDoneButton.css('opacity', '0%')
+    }
+});
 
 function enterdown() {
     if (event.key == 'Enter') { //mahdollistetaan enterin käyttö syöttäessä
@@ -38,34 +75,46 @@ function enterdown() {
     }
 }
 
-function didTask(taskId) { 
-    const taskEle = document.getElementById(taskId).parentElement
-    const taskReady = document.getElementById(taskId)        //otetaan talteen taski
-    taskEle.remove()      //poistetaan taski todo listasta
-    taskDone = document.getElementById('donetasks')
-    taskDone.appendChild(taskReady)              //lisätään taski done listalle
+function didTask(taskId) {
+    const taskReady = $('#' + taskId).children('p')       //otetaan talteen taski
+    $('#' + taskId).remove() //poistetaan taski
+    const doneTasks = $('#donetasks') //haetaan done listan elementti
+    doneTasks.append(taskReady) //lisätään done listaan tehty tehtävä
 
-    const h2 = document.querySelector('h2')
-    const clearDoneButton = document.getElementById('cleardone')
-    if (taskDone.children.length > 0) {      //jos done listalla on taskeja, h2-elementti ja clear-nappi tulee näkyviin
-        h2.style.opacity = "100%";
-        clearDoneButton.style.opacity = "100%";
+    // Tallennetaan tehty tehtävä localStorageen ja täten tehtyihin tehtäviin
+    let donetaskit = JSON.parse(localStorage.getItem('donetasks')) || [] //luodaan aTask-objekti, joka sisältää id:n ja tekstin
+    donetaskit.push(taskReady.text()) //lisätään tehty tehtävä donetaskit-taulukkoon
+    localStorage.setItem('donetasks', JSON.stringify(donetaskit)) //tallennetaan taskit-taulukko localStorageen
+
+    // Poistetaan tehtävä taskit-taulukosta
+    let taskit = JSON.parse(localStorage.getItem('tasks')) || []
+    taskit = taskit.filter(task => task.id != taskId)
+    localStorage.setItem('tasks', JSON.stringify(taskit)) //tallennetaan taskit-taulukko localStorageen
+    
+    const h2 = $('h2') //haetaan done listan h2-elementti
+    const clearDoneButton = $('#cleardone')
+    if (doneTasks.length > 0) {      //jos done listalla on taskeja, h2-elementti ja clear-nappi tulee näkyviin
+        h2.css('opacity', '100%') //muutetaan h2-elementin ja napin tyyliä
+        clearDoneButton.css('opacity', '100%')
     } else {
-        h2.style.opacity = "0%";
-        clearDoneButton.style.opacity = "0%";
+        h2.css('opacity', '0%') //muutetaan h2-elementin ja napin tyyliä
+        clearDoneButton.css('opacity', '0%')
     }
+
 }
 
 function removeTask(taskId) {
-    const taskEle = document.getElementById(taskId).parentElement
-    taskEle.remove()      //poistetaan taski todo listasta
+    console.log('Removing task with ID:', taskId)
+    let taskit = JSON.parse(localStorage.getItem('tasks')) || []     //haetaan taskit-taulukko localStoragesta
+    taskit = taskit.filter(task => task.id != taskId)       //suodatetaan pois poistettava taski
+    localStorage.setItem('tasks', JSON.stringify(taskit)) //tallennetaan taskit-taulukko localStorageen
+    $('#'+taskId).remove()
+
 }
 
 function clearDone() {
-    const taskDone = document.getElementById('donetasks')
-    taskDone.innerHTML = '' //tyhjennetään done listan sisältö
-    const h2 = document.querySelector('h2')
-    h2.style.opacity = "0%"; //piilotetaan h2-elementti
-    const clearDoneButton = document.getElementById('cleardone')
-    clearDoneButton.style.opacity = "0%"; //piilotetaan clear-nappi
+    $('#donetasks').empty() //tyhjennetään done listan sisältö
+    $('h2').css('opacity', '0%') //piilotetaan done listan h2-elementti
+    $('#cleardone').css('opacity', '0%') //piilotetaan clear-nappi
+    localStorage.removeItem('donetasks') //poistetaan done listan tehtävät localStoragesta
 }

@@ -2,6 +2,9 @@ body {
     position:relative;
     text-align: center;
     font-family: 'Roboto', sans-serif;
+    background-color: rgb(43, 43, 43);
+    color: white;
+    align-items: center;
 }
 button {
     margin-left: 1%;
@@ -15,6 +18,7 @@ button {
     margin-top: 0%;
     font-size: 13px;
     border-color: rgb(180, 180, 180);
+    border: 1px solid rgb(180, 180, 180);
 }
 
 p {
@@ -30,7 +34,21 @@ p {
 }
 
 .oma {
-    font-size: 10px;
+    font-size: 11px;
+    color: white;
+    bottom: 4px;
+    position: sticky;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.1rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    border-radius: 0.5rem;
+    margin-top: 11.5rem;
+    align-self: bottom;;
+}
+
+h1 {
+    margin-top: 1.3rem;
 }
 
 h2 {
@@ -38,11 +56,79 @@ h2 {
     opacity: 0%;
 }
 
-
 #donetasks * {
     display: block;
 }
 
 #cleardone {
+    margin-left: 0%;
+    margin-top: 0%;
+    font-size: 13px;
+    border-color: rgb(180, 180, 180);
+    border-radius: 0.2rem;
+    border: 1px solid rgb(180, 180, 180);
     opacity: 0%;
+    align-self: center;
+    text-align: center;
+}
+
+#task {
+    margin-top: 0%;
+    padding: 0.24rem;
+    padding-top: 0.175rem;
+    padding-bottom: 0.31rem;
+    border: 1px solid rgb(180, 180, 180);
+    border-radius: 0.5rem;
+}
+
+#taskname {
+    text-align: center;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.btn {
+    transition: all 0.3s ease-in-out;
+    align-self: center;
+    margin: auto;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    #taskname {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+    }
+    .btn-success{
+        transition: all 0.3s ease-in-out;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 1.4rem;
+    }
+    .btn-danger {
+        transition: all 0.3s ease-in-out;
+        padding: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 1.4rem;
+    }
+    #cleardone {
+        transition: all 0.3s ease-in-out;
+        margin-left: 0%;
+        margin-top: 0%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 1.2rem;
+        border-color: rgb(180, 180, 180);
+        border-radius: 0.2rem;
+        border: 1px solid rgb(180, 180, 180);
+        opacity: 0%;
+        align-self: center;
+        text-align: center;
+    }
+    #addtask {
+        font-size: 1.1rem;
+    }
 }
