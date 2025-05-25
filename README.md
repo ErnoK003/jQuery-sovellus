@@ -1,4 +1,4 @@
-# jQuery project UPDATED LATER
+# jQuery project
 Upgraded To do list by ErnoK003
 
 ## Demo link:
